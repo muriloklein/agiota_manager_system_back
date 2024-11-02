@@ -7,7 +7,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { BillEntity } from "./Bill";
+import { BillEntity } from "./bill";
 import { UserEntity } from "./user";
 
 @Entity()

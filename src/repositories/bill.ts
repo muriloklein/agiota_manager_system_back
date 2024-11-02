@@ -1,5 +1,5 @@
 import { DataSource, In, Repository } from "typeorm";
-import { BillEntity } from "../entities/Bill";
+import { BillEntity } from "../entities/bill";
 
 class BillRepository implements BillRepository {
   private repository: Repository<BillEntity>;

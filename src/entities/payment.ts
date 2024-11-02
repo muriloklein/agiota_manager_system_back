@@ -5,7 +5,7 @@ import {
   ManyToOne,
   CreateDateColumn,
 } from "typeorm";
-import { BillEntity } from "./Bill";
+import { BillEntity } from "./bill";
 
 @Entity()
 export class PaymentEntity {
