@@ -7,11 +7,11 @@ import {
   UpdateDateColumn,
   BeforeInsert,
 } from "typeorm";
-import { ClientEntity } from "./client";
+import { Client } from "./client";
 import bcrypt from "bcrypt";
 
 @Entity()
-export class UserEntity {
+export class User {
   @PrimaryGeneratedColumn()
   id?: number;
 
@@ -21,8 +21,8 @@ export class UserEntity {
   @Column()
   pin?: string;
 
-  @OneToMany(() => ClientEntity, (client) => client.loanShark)
-  clients?: ClientEntity[];
+  @OneToMany(() => Client, (client) => client.loanShark)
+  clients?: Client[];
 
   @CreateDateColumn()
   createdAt?: Date;
@@ -41,7 +41,7 @@ export class UserEntity {
     id?: number,
     name?: string,
     pin?: string,
-    clients?: ClientEntity[],
+    clients?: Client[],
     createdAt?: Date,
     updatedAt?: Date
   ) {

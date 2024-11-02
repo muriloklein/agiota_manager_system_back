@@ -1,38 +1,38 @@
 import { DataSource, In, Repository } from "typeorm";
-import { PaymentEntity } from "../entities/payment";
+import { Payment } from "../entities/payment";
 
 class PaymentRepository implements PaymentRepository {
-  private repository: Repository<PaymentEntity>;
+  private repository: Repository<Payment>;
 
   constructor(dataSource: DataSource) {
-    this.repository = dataSource.getRepository(PaymentEntity);
+    this.repository = dataSource.getRepository(Payment);
   }
 
-  async getAll(): Promise<PaymentEntity[]> {
+  async getAll(): Promise<Payment[]> {
     return this.repository.find();
   }
 
-  async getById(id: number): Promise<PaymentEntity | undefined> {
+  async getById(id: number): Promise<Payment | undefined> {
     const payment = await this.repository.findOneBy({ id });
     return payment || undefined;
   }
 
-  async getBy(ids: number[]): Promise<PaymentEntity[] | undefined> {
+  async getBy(ids: number[]): Promise<Payment[] | undefined> {
     const payments = await this.repository.findBy({
       id: In(ids),
     });
     return payments || undefined;
   }
 
-  async create(payment: Omit<PaymentEntity, "id">): Promise<PaymentEntity> {
+  async create(payment: Omit<Payment, "id">): Promise<Payment> {
     const newPayment = this.repository.create(payment);
     return this.repository.save(newPayment);
   }
 
   async update(
     id: number,
-    payment: Partial<Omit<PaymentEntity, "id">>
-  ): Promise<PaymentEntity | undefined> {
+    payment: Partial<Omit<Payment, "id">>
+  ): Promise<Payment | undefined> {
     const paymentToUpdate = await this.getById(id);
 
     if (!paymentToUpdate) {

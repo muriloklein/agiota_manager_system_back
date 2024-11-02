@@ -1,38 +1,38 @@
 import { DataSource, In, Repository } from "typeorm";
-import { BillEntity } from "../entities/bill";
+import { Bill } from "../entities/bill";
 
 class BillRepository implements BillRepository {
-  private repository: Repository<BillEntity>;
+  private repository: Repository<Bill>;
 
   constructor(dataSource: DataSource) {
-    this.repository = dataSource.getRepository(BillEntity);
+    this.repository = dataSource.getRepository(Bill);
   }
 
-  async getAll(): Promise<BillEntity[]> {
+  async getAll(): Promise<Bill[]> {
     return this.repository.find();
   }
 
-  async getById(id: number): Promise<BillEntity | undefined> {
+  async getById(id: number): Promise<Bill | undefined> {
     const bill = await this.repository.findOneBy({ id });
     return bill || undefined;
   }
 
-  async getBy(ids: number[]): Promise<BillEntity[] | undefined> {
+  async getBy(ids: number[]): Promise<Bill[] | undefined> {
     const bills = await this.repository.findBy({
       id: In(ids),
     });
     return bills || undefined;
   }
 
-  async create(cientista: Omit<BillEntity, "id">): Promise<BillEntity> {
+  async create(cientista: Omit<Bill, "id">): Promise<Bill> {
     const newBill = this.repository.create(cientista);
     return this.repository.save(newBill);
   }
 
   async update(
     id: number,
-    bill: Partial<Omit<BillEntity, "id">>
-  ): Promise<BillEntity | undefined> {
+    bill: Partial<Omit<Bill, "id">>
+  ): Promise<Bill | undefined> {
     const billToUpdate = await this.getById(id);
 
     if (!billToUpdate) {

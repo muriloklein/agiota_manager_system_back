@@ -7,11 +7,11 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { ClientEntity } from "./client";
-import { PaymentEntity } from "./payment";
+import { Client } from "./client";
+import { Payment } from "./payment";
 
 @Entity()
-export class BillEntity {
+export class Bill {
   @PrimaryGeneratedColumn()
   id?: number;
 
@@ -33,11 +33,11 @@ export class BillEntity {
   @Column({ default: false })
   paid?: boolean;
 
-  @ManyToOne(() => ClientEntity, (client) => client.bills)
-  client?: ClientEntity;
+  @ManyToOne(() => Client, (client) => client.bills)
+  client?: Client;
 
-  @OneToMany(() => PaymentEntity, (payment) => payment.bill)
-  payments?: PaymentEntity[];
+  @OneToMany(() => Payment, (payment) => payment.bill)
+  payments?: Payment[];
 
   @CreateDateColumn()
   createdAt?: Date;
@@ -53,8 +53,8 @@ export class BillEntity {
     dueDate?: Date,
     amountPaid?: number,
     paid?: boolean,
-    client?: ClientEntity,
-    payments?: PaymentEntity[],
+    client?: Client,
+    payments?: Payment[],
     createdAt?: Date,
     updatedAt?: Date
   ) {

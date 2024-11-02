@@ -7,11 +7,11 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { BillEntity } from "./bill";
-import { UserEntity } from "./user";
+import { Bill } from "./bill";
+import { User } from "./user";
 
 @Entity()
-export class ClientEntity {
+export class Client {
   @PrimaryGeneratedColumn()
   id?: number;
 
@@ -24,11 +24,11 @@ export class ClientEntity {
   @Column({ nullable: true })
   address?: string;
 
-  @ManyToOne(() => UserEntity, (loanShark) => loanShark.clients)
-  loanShark?: UserEntity;
+  @ManyToOne(() => User, (loanShark) => loanShark.clients)
+  loanShark?: User;
 
-  @OneToMany(() => BillEntity, (bill) => bill.client)
-  bills?: BillEntity[];
+  @OneToMany(() => Bill, (bill) => bill.client)
+  bills?: Bill[];
 
   @CreateDateColumn()
   createdAt?: Date;
@@ -41,8 +41,8 @@ export class ClientEntity {
     name?: string,
     phone?: string,
     address?: string,
-    loanShark?: UserEntity,
-    bills?: BillEntity[],
+    loanShark?: User,
+    bills?: Bill[],
     createdAt?: Date,
     updatedAt?: Date
   ) {

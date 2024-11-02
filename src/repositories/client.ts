@@ -1,38 +1,38 @@
 import { DataSource, In, Repository } from "typeorm";
-import { ClientEntity } from "../entities/client";
+import { Client } from "../entities/client";
 
 class ClientRepository implements ClientRepository {
-  private repository: Repository<ClientEntity>;
+  private repository: Repository<Client>;
 
   constructor(dataSource: DataSource) {
-    this.repository = dataSource.getRepository(ClientEntity);
+    this.repository = dataSource.getRepository(Client);
   }
 
-  async getAll(): Promise<ClientEntity[]> {
+  async getAll(): Promise<Client[]> {
     return this.repository.find();
   }
 
-  async getById(id: number): Promise<ClientEntity | undefined> {
+  async getById(id: number): Promise<Client | undefined> {
     const client = await this.repository.findOneBy({ id });
     return client || undefined;
   }
 
-  async getBy(ids: number[]): Promise<ClientEntity[] | undefined> {
+  async getBy(ids: number[]): Promise<Client[] | undefined> {
     const clients = await this.repository.findBy({
       id: In(ids),
     });
     return clients || undefined;
   }
 
-  async create(client: Omit<ClientEntity, "id">): Promise<ClientEntity> {
+  async create(client: Omit<Client, "id">): Promise<Client> {
     const newClient = this.repository.create(client);
     return this.repository.save(newClient);
   }
 
   async update(
     id: number,
-    client: Partial<Omit<ClientEntity, "id">>
-  ): Promise<ClientEntity | undefined> {
+    client: Partial<Omit<Client, "id">>
+  ): Promise<Client | undefined> {
     const clientToUpdate = await this.getById(id);
 
     if (!clientToUpdate) {
