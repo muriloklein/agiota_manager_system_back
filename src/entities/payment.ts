@@ -5,23 +5,28 @@ import {
   ManyToOne,
   CreateDateColumn,
 } from "typeorm";
-import { Bill } from "./Bill";
+import { BillEntity } from "./Bill";
 
 @Entity()
-export class Payment {
+export class PaymentEntity {
   @PrimaryGeneratedColumn()
   id?: number;
 
   @Column("decimal", { precision: 10, scale: 2 })
   value?: number;
 
-  @ManyToOne(() => Bill, (bill) => bill.payments)
-  bill?: Bill;
+  @ManyToOne(() => BillEntity, (bill) => bill.payments)
+  bill?: BillEntity;
 
   @CreateDateColumn()
   paymentDate?: Date;
 
-  constructor(id?: number, value?: number, bill?: Bill, paymentDate?: Date) {
+  constructor(
+    id?: number,
+    value?: number,
+    bill?: BillEntity,
+    paymentDate?: Date
+  ) {
     this.id = id;
     this.value = value;
     this.bill = bill;
