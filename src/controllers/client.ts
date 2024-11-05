@@ -10,8 +10,13 @@ export class ClientController {
   }
 
   getAll = async (req: Request, res: Response): Promise<void> => {
-    const clients = await this.ClientRepository.getAll();
-    if (!clients.length) res.status(204);
+    const { limit = 10, offset = 0 } = req.query;
+    const clients = await this.ClientRepository.getAll(
+      Number(limit),
+      Number(offset)
+    );
+
+    if (!clients.length) res.status(204).send();
     else res.status(200).json(clients);
   };
 
@@ -46,7 +51,7 @@ export class ClientController {
     if (!success) {
       res.status(404).json({ message: "Client not found" });
     } else {
-      res.status(200).json({ message: "Client excluido com sucesso" });
+      res.status(200).json({ message: "Client excluído com sucesso" });
     }
   };
 }

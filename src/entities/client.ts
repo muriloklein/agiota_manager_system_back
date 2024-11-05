@@ -3,15 +3,14 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
-  OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { Bill } from "./bill";
 import { User } from "./user";
 
 @Entity()
 export class Client {
+  @Column({ unique: true })
   @PrimaryGeneratedColumn()
   id?: number;
 
@@ -21,14 +20,14 @@ export class Client {
   @Column()
   phone?: string;
 
+  @Column()
+  bill?: number;
+
   @Column({ nullable: true })
   address?: string;
 
   @ManyToOne(() => User, (loanShark) => loanShark.clients)
   loanShark?: User;
-
-  @OneToMany(() => Bill, (bill) => bill.client)
-  bills?: Bill[];
 
   @CreateDateColumn()
   createdAt?: Date;
@@ -42,7 +41,7 @@ export class Client {
     phone?: string,
     address?: string,
     loanShark?: User,
-    bills?: Bill[],
+    bill?: number,
     createdAt?: Date,
     updatedAt?: Date
   ) {
@@ -51,7 +50,7 @@ export class Client {
     this.phone = phone;
     this.address = address;
     this.loanShark = loanShark;
-    this.bills = bills;
+    this.bill = bill;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
   }

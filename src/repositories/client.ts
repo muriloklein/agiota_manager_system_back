@@ -8,8 +8,11 @@ class ClientRepository implements ClientRepository {
     this.repository = dataSource.getRepository(Client);
   }
 
-  async getAll(): Promise<Client[]> {
-    return this.repository.find();
+  async getAll(limit: number = 10, offset: number = 0): Promise<Client[]> {
+    return this.repository.find({
+      take: limit,
+      skip: offset,
+    });
   }
 
   async getById(id: number): Promise<Client | undefined> {
