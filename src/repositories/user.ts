@@ -1,27 +1,22 @@
-import { DataSource, In, Repository } from "typeorm";
+import { DataSource, Repository } from "typeorm";
 import { User } from "../entities/user";
 
-class UserRepository implements UserRepository {
+class UserRepository {
   private repository: Repository<User>;
 
   constructor(dataSource: DataSource) {
     this.repository = dataSource.getRepository(User);
   }
 
-  async getAll(): Promise<User[]> {
-    return this.repository.find();
+  async getAll(limit: number, offset: number): Promise<User[]> {
+    return this.repository.find({
+      skip: offset,
+      take: limit,
+    });
   }
 
   async getById(id: number): Promise<User | undefined> {
-    const user = await this.repository.findOneBy({ id });
-    return user || undefined;
-  }
-
-  async getBy(ids: number[]): Promise<User[] | undefined> {
-    const users = await this.repository.findBy({
-      id: In(ids),
-    });
-    return users || undefined;
+    return this.repository.findOneBy({ id });
   }
 
   async create(user: Omit<User, "id">): Promise<User> {
@@ -34,10 +29,7 @@ class UserRepository implements UserRepository {
     user: Partial<Omit<User, "id">>
   ): Promise<User | undefined> {
     const userToUpdate = await this.getById(id);
-
-    if (!userToUpdate) {
-      return undefined;
-    }
+    if (!userToUpdate) return undefined;
 
     const updatedUser = this.repository.merge(userToUpdate, user);
     return this.repository.save(updatedUser);
@@ -45,7 +37,7 @@ class UserRepository implements UserRepository {
 
   async delete(id: number): Promise<boolean> {
     const result = await this.repository.delete(id);
-    return result?.affected ? result.affected > 0 : false;
+    return result.affected ? result.affected > 0 : false;
   }
 }
 
