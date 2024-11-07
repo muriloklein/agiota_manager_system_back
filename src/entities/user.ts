@@ -5,10 +5,8 @@ import {
   OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
-  BeforeInsert,
 } from "typeorm";
 import { Client } from "./client";
-import bcrypt from "bcrypt";
 
 @Entity()
 export class User {
@@ -30,11 +28,4 @@ export class User {
 
   @UpdateDateColumn()
   updatedAt?: Date;
-
-  @BeforeInsert()
-  async hashPin() {
-    if (this.pin) {
-      this.pin = await bcrypt.hash(this.pin, 10);
-    }
-  }
 }
