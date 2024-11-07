@@ -9,49 +9,52 @@ export class UserController {
     this.userRepository = new UserRepository(appDataSource);
   }
 
-  getAll = async (req: Request, res: Response): Promise<void> => {
-    const { limit = 10, offset = 0 } = req.query;
-    const users = await this.userRepository.getAll(
-      Number(limit),
-      Number(offset)
-    );
+  login = async (req: Request, res: Response): Promise<void> => {
+    const { name, pin } = req.body;
 
-    if (!users.length) res.status(204).send();
-    else res.status(200).json(users);
-  };
+    if (!name || !pin) {
+      res.status(400).json({ message: "Name and PIN are required" });
+      return;
+    }
 
-  getById = async (req: Request, res: Response): Promise<void> => {
-    const user = await this.userRepository.getById(parseInt(req.params.id));
+    const user = await this.userRepository.getByName(name as string);
+
     if (!user) {
       res.status(404).json({ message: "User not found" });
-    } else {
-      res.status(200).json(user);
+      return;
     }
+
+    const isPinValid = (pin as string) == user.pin;
+
+    if (!isPinValid) {
+      res.status(401).json({ message: "Invalid PIN" });
+      return;
+    }
+
+    if (isPinValid && user.name == name) {
+      res.status(200).json({ message: "Login successful", user });
+      return;
+    }
+
+    res.status(401).json({ message: "Invalid credentials" });
   };
 
   create = async (req: Request, res: Response): Promise<void> => {
-    const newUser = await this.userRepository.create(req.body);
-    if (newUser) res.status(201).json({ message: "User added" });
-  };
+    const { name, pin } = req.body;
 
-  update = async (req: Request, res: Response): Promise<void> => {
-    const updatedUser = await this.userRepository.update(
-      parseInt(req.params.id),
-      req.body
-    );
-    if (!updatedUser) {
-      res.status(404).json({ message: "User not found" });
-    } else {
-      res.status(200).json(updatedUser);
+    if (!name || !pin) {
+      res.status(400).json({ message: "Name and PIN are required" });
+      return;
     }
-  };
-
-  delete = async (req: Request, res: Response): Promise<void> => {
-    const success = await this.userRepository.delete(parseInt(req.params.id));
-    if (!success) {
-      res.status(404).json({ message: "User not found" });
-    } else {
-      res.status(200).json({ message: "User excluído com sucesso" });
+    try {
+      const newUser = await this.userRepository.create({
+        name,
+        pin,
+      });
+      res.status(201).json({ message: "User added", user: newUser });
+    } catch (error) {
+      console.error("Error creating user:", error);
+      res.status(500).json({ message: "Internal server error" });
     }
   };
 }
