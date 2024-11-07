@@ -8,6 +8,10 @@ class UserRepository {
     this.repository = dataSource.getRepository(User);
   }
 
+  async getByName(name: string): Promise<User | null> {
+    return this.repository.findOneBy({ name });
+  }
+
   async getAll(limit: number, offset: number): Promise<User[]> {
     return this.repository.find({
       skip: offset,
@@ -15,7 +19,7 @@ class UserRepository {
     });
   }
 
-  async getById(id: number): Promise<User | undefined> {
+  async getById(id: number): Promise<User | null> {
     return this.repository.findOneBy({ id });
   }
 
