@@ -1,6 +1,7 @@
 import express, { Application } from "express";
 import cors from "cors";
 import errorHandler from "./middleware/errorHandler";
+import "./@types/express";
 
 import routerUser from "./routes/user";
 import routerClient from "./routes/client";
