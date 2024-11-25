@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { appDataSource } from "../data-source";
 import UserRepository from "../repositories/user";
+import { generateToken } from "../utils/jwt";
 
 export class UserController {
   private userRepository: UserRepository;
@@ -31,8 +32,10 @@ export class UserController {
       return;
     }
 
+    const token = generateToken({ id: user.id!, name: user.name! });
+
     if (isPinValid && user.name == name) {
-      res.status(200).json({ message: "Login successful", user });
+      res.status(200).json({ message: "Login successful", user, token });
       return;
     }
 
